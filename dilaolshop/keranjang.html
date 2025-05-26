@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Keranjang - dilaolshop</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    function tampilkanKeranjang() {
+      const keranjang = JSON.parse(localStorage.getItem('keranjang')) || [];
+      const container = document.getElementById('listKeranjang');
+      const totalEl = document.getElementById('totalHarga');
+      container.innerHTML = '';
+      let total = 0;
+
+      keranjang.forEach((item, index) => {
+        total += item.harga;
+        const div = document.createElement('div');
+        div.className = 'bg-white rounded-lg shadow p-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2';
+        div.innerHTML = `
+          <div>
+            <p class="text-pink-700">${item.nama} - Rp ${item.harga.toLocaleString()}</p>
+          </div>
+          <button class="text-sm text-red-500 hover:underline" onclick="hapusItem(${index})">Hapus</button>
+        `;
+        container.appendChild(div);
+      });
+
+      totalEl.textContent = 'Total: Rp ' + total.toLocaleString();
+    }
+
+    function hapusItem(index) {
+      let keranjang = JSON.parse(localStorage.getItem('keranjang')) || [];
+      keranjang.splice(index, 1);
+      localStorage.setItem('keranjang', JSON.stringify(keranjang));
+      tampilkanKeranjang();
+    }
+
+    window.onload = tampilkanKeranjang;
+  </script>
+</head>
+<body class="bg-pink-50 font-sans">
+
+  <!-- Header -->
+  <header class="bg-pink-200 py-4 shadow-md">
+    <div class="max-w-7xl mx-auto px-4 flex justify-between items-center">
+      <h1 class="text-2xl font-bold text-pink-800">dilaolshop</h1>
+      <button id="toggleMenu" class="sm:hidden text-2xl text-pink-800 focus:outline-none">
+        ☰
+      </button>
+      <nav id="menuItems" class="hidden sm:flex flex-col sm:flex-row sm:space-x-4 mt-2 sm:mt-0 text-center sm:text-left">
+        <a href="index.html" class="text-pink-700 hover:underline py-1">Beranda</a>
+        <a href="katalog.html" class="text-pink-700 hover:underline py-1">Katalog</a>
+        <a href="keranjang.html" class="text-pink-700 hover:underline py-1">Keranjang</a>
+        <a href="kontak.html" class="text-pink-700 hover:underline">Kontak</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Konten Keranjang -->
+  <section class="max-w-4xl mx-auto px-4 py-8">
+    <h3 class="text-2xl font-bold text-pink-800 mb-6 text-center sm:text-left">Keranjang Belanja</h3>
+    <div id="listKeranjang" class="space-y-4"></div>
+    <div id="totalHarga" class="text-right text-pink-800 font-semibold mt-4">Total: Rp 0</div>
+    <a href="checkout.html">
+      <button class="mt-4 px-6 py-2 w-full sm:w-auto bg-pink-500 text-white rounded hover:bg-pink-600 transition">
+        Checkout
+      </button>
+    </a>
+  </section>
+
+  <!-- Script toggle menu -->
+  <script>
+    document.getElementById('toggleMenu').onclick = function () {
+      document.getElementById('menuItems').classList.toggle('hidden');
+    };
+  </script>
+
+</body>
+</html>
